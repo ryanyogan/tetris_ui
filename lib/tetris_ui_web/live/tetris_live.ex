@@ -13,7 +13,7 @@ defmodule TetrisUiWeb.TetrisLive do
 
   def render(assigns) do
     ~L"""
-    <div>
+    <div phx-window-keydown="keydown">
       <%= raw svg_head() %>
       <%= raw boxes(@tetromino) %>
       <%= raw svg_foot() %>
@@ -44,6 +44,7 @@ defmodule TetrisUiWeb.TetrisLive do
     points =
       brick
       |> Tetris.Brick.prepare()
+      |> Tetris.Points.move_to_location(brick.location)
       |> Tetris.Points.with_color(color(brick))
 
     assign(socket, tetromino: points)
@@ -114,4 +115,29 @@ defmodule TetrisUiWeb.TetrisLive do
   defp color(%{name: :z}), do: :grey
 
   defp to_pixels({x, y}), do: {x * @box_width, y * @box_height}
+
+  def move(direction, socket) do
+    socket
+    |> do_move(direction)
+    |> show_tetromino
+  end
+
+  def do_move(socket, :left) do
+    assign(socket, brick: socket.assigns.brick |> Brick.left())
+  end
+
+  def do_move(socket, :right) do
+    assign(socket, brick: socket.assigns.brick |> Brick.right())
+  end
+
+  def handle_event("keydown", %{"key" => "ArrowLeft"}, socket) do
+    {:noreply, move(:left, socket)}
+  end
+
+  def handle_event("keydown", %{"key" => "ArrowRight"}, socket) do
+    {:noreply, move(:right, socket)}
+  end
+
+  def handle_event("keydown", _params, socket),
+    do: {:noreply, socket}
 end
