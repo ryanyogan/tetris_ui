@@ -1,6 +1,6 @@
 # TetrisUi
 
-![Elixir CI](https://github.com/ryanyogan/tetris_ui/workflows/Elixir%20CI/badge.svg)
+![Elixir CI](https://github.com/ryanyogan/tetris_ui/workflows/Elixir%20CI/badge.svg?branch=master)
 
 To start your Phoenix server:
 
