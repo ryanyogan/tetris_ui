@@ -18,10 +18,7 @@ defmodule TetrisUiWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :index
-  end
 
-  # Other scopes may use custom stacks.
-  # scope "/api", TetrisUiWeb do
-  #   pipe_through :api
-  # end
+    live "/tetris", TetrisLive
+  end
 end
