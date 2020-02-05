@@ -35,11 +35,10 @@ defmodule Tetris.Points do
   def rotate(points, 0), do: points
 
   def rotate(points, degrees) do
-    points
-    |> rotate_90()
-    |> rotate(degrees - 90)
-
-    points
+    rotate(
+      rotate_90(points),
+      degrees - 90
+    )
   end
 
   def with_color(points, color) do
