@@ -8,22 +8,45 @@ defmodule TetrisUiWeb.TetrisLive do
   @box_height 20
 
   def mount(_session, socket) do
-    {
-      :ok,
-      assign(socket,
-        tetromino: Brick.new_random() |> Brick.to_string()
-      )
-    }
+    {:ok, new_game(socket)}
   end
 
   def render(assigns) do
     ~L"""
     <div>
       <%= raw svg_head() %>
-      <%= raw box({1, 1}, :grey) %>
+      <%= raw boxes(@tetromino) %>
       <%= raw svg_foot() %>
     </div>
     """
+  end
+
+  defp new_game(socket) do
+    assign(socket,
+      state: :playing,
+      score: 0
+    )
+    |> new_block()
+    |> show_tetromino()
+  end
+
+  def new_block(socket) do
+    brick =
+      Tetris.Brick.new_random()
+      |> Map.put(:location, {3, 1})
+
+    assign(socket, brick: brick)
+  end
+
+  def show_tetromino(socket) do
+    brick = socket.assigns.brick
+
+    points =
+      brick
+      |> Tetris.Brick.prepare()
+      |> Tetris.Points.with_color(color(brick))
+
+    assign(socket, tetromino: points)
   end
 
   def svg_head() do
@@ -40,6 +63,14 @@ defmodule TetrisUiWeb.TetrisLive do
   end
 
   def svg_foot(), do: "</svg>"
+
+  def boxes(points_with_colors) do
+    points_with_colors
+    |> Enum.map(fn {x, y, color} ->
+      box({x, y}, color)
+    end)
+    |> Enum.join("\n")
+  end
 
   def box(point, color) do
     """
@@ -75,6 +106,12 @@ defmodule TetrisUiWeb.TetrisLive do
   defp shades(:green), do: %{light: "8BBF57", dark: "769359"}
   defp shades(:orange), do: %{light: "CB8E4E", dark: "AC7842"}
   defp shades(:grey), do: %{light: "A1A09E", dark: "7F7F7E"}
+
+  defp color(%{name: :t}), do: :red
+  defp color(%{name: :i}), do: :blue
+  defp color(%{name: :l}), do: :green
+  defp color(%{name: :o}), do: :orange
+  defp color(%{name: :z}), do: :grey
 
   defp to_pixels({x, y}), do: {x * @box_width, y * @box_height}
 end
