@@ -130,12 +130,20 @@ defmodule TetrisUiWeb.TetrisLive do
     assign(socket, brick: socket.assigns.brick |> Brick.right())
   end
 
+  def do_move(socket, :turn) do
+    assign(socket, brick: socket.assigns.brick |> Tetris.Brick.spin_90())
+  end
+
   def handle_event("keydown", %{"key" => "ArrowLeft"}, socket) do
     {:noreply, move(:left, socket)}
   end
 
   def handle_event("keydown", %{"key" => "ArrowRight"}, socket) do
     {:noreply, move(:right, socket)}
+  end
+
+  def handle_event("keydown", %{"key" => "ArrowUp"}, socket) do
+    {:noreply, move(:turn, socket)}
   end
 
   def handle_event("keydown", _params, socket),
