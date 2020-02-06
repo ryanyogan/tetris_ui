@@ -8,7 +8,7 @@ defmodule Tetris.Gutter do
   def collides?(gutter, {x, y, _color}), do: collides?(gutter, {x, y})
 
   def collides?(gutter, {x, y}) do
-    !!Map.get(gutter, {x, y})
+    !!Map.get(gutter, {x, y}) || x < 1 || x > 10 || y > 20
   end
 
   def collides?(gutter, points) when is_list(points) do
