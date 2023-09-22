@@ -32,7 +32,7 @@ defmodule TetrisUi.MixProject do
       {:gettext, "~> 0.17"},
       {:jason, "~> 1.0"},
       {:plug_cowboy, "~> 2.0"},
-      {:phoenix_live_view, "~> 0.5.1"},
+      {:phoenix_live_view, "~> 0.20.0"},
       {:floki, ">= 0.0.0", only: :test},
 
       # Path Based Libraries
